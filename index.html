@@ -3,15 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enjambre de Aves Avance</title>
+    <title>Enjambre de Aves Avance 2</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
             background-color: #87CEEB;
+            font-family: sans-serif;
         }
         canvas {
             display: block;
+        }
+        #fps-counter {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #00ff00;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 10;
         }
     </style>
     <script type="importmap">
@@ -24,6 +38,7 @@
     </script>
 </head>
 <body>
+    <div id="fps-counter">FPS: 0 | Agentes: 100</div>
     <canvas id="webgl-canvas"></canvas>
     <script type="module" src="main.js"></script>
 </body>
