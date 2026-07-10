@@ -1,40 +1,58 @@
-# **Proyecto: Enjambre de Aves Autónomas en Three.js**
-## **SEGUNDO AVANCE**
+# **Proyecto: Enjambre de Aves Autónomas con Three.js**
+## **ENTREGA FINAL DEL PROYECTO**
 
 ## **Descripción General**
-Este proyecto representa la segunda versión funcional que integra técnicas avanzadas de optimización y shaders personalizados utilizando la biblioteca Three.js. El objetivo principal es desplegar un mundo 3D de cielo abierto habitado por un enjambre masivo de agentes autónomos con un rendimiento óptimo y animaciones independientes procesadas directamente en la GPU.
+Este proyecto representa la consolidación final de todo el trabajo realizado en la materia de computación gráfica. Lo que comenzó como una escena tridimensional básica se transformó en un ecosistema dinámico y fluido que simula el comportamiento emergente de una parvada masiva de 200 aves autónomas volando sobre un entorno forestal denso. 
+
+El principal logro técnico de esta aplicación es su alto rendimiento, manteniendo una tasa constante de 30 FPS fijos en el navegador. Esto se consiguió delegando las tareas más pesadas de animación a la tarjeta gráfica (GPU) mediante shaders personalizados y optimizando la búsqueda de proximidad física en la CPU.
 
 ---
 
 ## **Estructura del Proyecto**
-La organización de los archivos está diseñada para mantener el código limpio y separar los recursos externos de la lógica del programa:
+El repositorio está organizado de manera limpia para separar el código fuente de los recursos gráficos externos:
 
-    proyecto-enjambre/
-    ├── index.html       # Estructura principal, estilos, contador de FPS e Import Maps.
-    ├── main.js          # Lógica principal, simulación en CPU, InstancedMesh y ShaderMaterial.
-    └── assets/
-        └── plumas.jpg   # Textura seamless utilizada para cubrir la geometría de los agentes.
+proyecto-enjambre/
+├── index.html       # Contenedor de la página, lienzos de WebGL, estilos de la interfaz y mapa de importaciones.
+├── main.js          # Código principal con la simulación de Boids, optimización espacial y lógica de shaders.
+└── assets/          # Carpeta de recursos multimedia del sistema.
+    ├── fly.fbx      # Modelo tridimensional articulado del ave exportado desde Maya.
+    └── alas.png     # Textura personalizada para vestir la superficie de los agentes.
 
 ---
 
-## **Características Integradas y Requisitos Cumplidos**
+## **Características Integradas y Decisiones Técnicas**
 
-* **Entorno y Escena Base (T1):**
-  Implementación de una cámara perspectiva, fondo sólido, niebla atmosférica (Fog) para dar sensación de profundidad, y un sistema de iluminación compuesto por luz ambiental y luz direccional con proyección de sombras.
-* **Manejo de Assets Externos (T2):**
-  Carga asíncrona de archivos mediante TextureLoader. La textura se aplica exitosamente al material de los agentes mediante mapeo UV dentro del shader personalizado.
-* **Geometría Aerodinámica y Orgánica:**
-  Evolución del modelo del agente a una estructura más realista basada en un torso en forma de gota utilizando una cápsula modificada, un pico afilado orientado al frente y alas triangulares con un barrido aerodinámico hacia atrás fusionadas mediante BufferGeometryUtils.
-* **Rendimiento Masivo vía InstancedMesh (T5):**
-  Renderizado eficiente de 100 agentes concurrentes utilizando una única llamada de dibujo (InstancedMesh). Las posiciones, orientaciones y el balanceo físico de cada ave se gestionan en la CPU mediante transformaciones de matrices independientes enviadas en cada frame.
-* **Shader Avanzado de Deformación de Vértices (T4 - Vertex Wobble):**
-  Implementación de un ShaderMaterial personalizado que calcula un aleteo ondulatorio asíncrono directamente en la GPU. Se utiliza un atributo único por instancia (a_wobbleOffset) para desincronizar los ciclos de animación entre las aves sin impacto en el procesador.
-* **Movimiento Autónomo, Límites y Control de Rendimiento:**
-  Cada agente vuela de forma autónoma con velocidades aleatorias dentro de un espacio de contención (Bounding Box). El bucle de animación está estrictamente limitado a un rendimiento objetivo de 30 FPS estables, con un medidor de fotogramas visible en la interfaz en tiempo real.
+### **1. Entorno de Alta Densidad Visual**
+* **Bosque de Instancias**: Para dar contexto a la escena, sustituimos el plano básico por un terreno de colinas suaves generado proceduralmente. Sobre este relieve distribuimos un bosque denso de 2,500 pinos.
+* **Optimización de Renderizado**: Cargar miles de modelos independientes colapsaría el navegador. Para solucionarlo, agrupamos toda la vegetación en mallas instanciadas individuales, permitiendo que la tarjeta gráfica dibuje todo el bosque en tan solo dos llamadas de renderizado, protegiendo el rendimiento general.
+* **Efectos de Atmósfera**: La escena incorpora iluminación ambiental combinada con una luz solar direccional para proyectar sombras claras sobre el relieve. Adicionalmente, se configuró un efecto de niebla para otorgar una sensación natural de profundidad y horizonte infinito.
+
+### **2. Integración de Modelos Externos**
+* **Fusión de Mallas**: Cargamos de forma asíncrona el archivo en formato FBX. Como el diseño original exportado desde Maya incluía las alas y el torso separados en tres piezas diferentes, desarrollamos un algoritmo que purifica los atributos geométricos y unifica las tres piezas en una sola estructura sólida antes de procesarla.
+* **Alineación de Vuelo**: Añadimos una corrección de rotación de 180 grados a la geometría final. Esto soluciona los problemas de orientación nativos del archivo, garantizando que el frente del ave apunte siempre hacia adelante en la misma dirección de su vector de velocidad.
+
+### **3. Optimización Espacial de la Física**
+* **Reglas de Flocking**: El movimiento colectivo se rige bajo los principios tradicionales de Craig Reynolds: Separación para evitar colisiones internas, Alineación para seguir el rumbo del grupo y Cohesión para mantenerse unidos como parvada.
+* **División por Celdas**: Calcular la distancia de cada ave contra todas las demás de la escena generaría un costo insostenible para el procesador. Para resolverlo, implementamos una estructura de celdas uniformes tridimensionales. Cada agente se registra únicamente en el cubo virtual que le corresponde por su posición y, al buscar compañeros, solo evalúa su celda actual y las 26 de su entorno inmediato, eliminando por completo el rezago por procesamiento.
+
+### **4. Animación Avanzada en GPU**
+* **Aleteo por Shader**: El movimiento de las alas se calcula en tiempo real dentro de un shader de vértices personalizado ejecutado directamente en el hardware gráfico.
+* **Desincronización Orgánica**: Con el fin de evitar que todas las aves se muevan exactamente al mismo tiempo como robots, inyectamos un valor de desfase aleatorio para cada una. Utilizando funciones de ondas senoidales combinadas con la distancia de los puntos respecto al torso, logramos que las alas se flexionen de manera independiente mientras el cuerpo se mantiene firme.
+
+### **5. Físicas de Contención y Control de FPS**
+* **Muro Anticolisión del Suelo**: Para evitar que la fuerza de cohesión empuje al grupo por debajo del escenario, implementamos un detector que evalúa la altura del relieve debajo de cada ave. Si un agente intenta descender más allá de la copa de los árboles, el sistema bloquea su avance y aplica un impulso vertical obligatorio que lo regresa al aire seguro.
+* **Rendimiento Sincronizado**: El bucle principal está restringido de forma estricta mediante un temporizador delta a un límite de 30 FPS estables. La interfaz muestra un medidor en tiempo real que valida la optimización ante cualquier evaluación.
+
+---
+
+## **Desarrolladores (Autores)**
+Este proyecto fue diseñado, desarrollado y optimizado en equipo por:
+* **Jose Abraham Marin Sanchez**
+* **Luis Antonio Salinas Mata**
 
 ---
 
 ## **Demostración en Vivo**
-El proyecto se encuentra desplegado en GitHub Pages y no requiere configuración local para su visualización. Se puede ver la simulación en ejecución directamente desde el siguiente enlace:
+La aplicación se encuentra totalmente desplegado y listo para ejecutarse en GitHub Pages de forma nativa en cualquier navegador, sin necesidad de configuraciones locales:
 
-**Enlace:** https://marinox.github.io/ProyectoGraficas/
+**Enlace al Proyecto:** https://marinox.github.io/ProyectoGraficas/
