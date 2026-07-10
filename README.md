@@ -1,6 +1,15 @@
 # **Proyecto: Enjambre de Aves Autónomas con Three.js**
 ## **ENTREGA FINAL DEL PROYECTO**
 
+---
+
+## **Desarrolladores:**
+Este proyecto fue desarrollado en equipo por:
+* **Jose Abraham Marin Sanchez**
+* **Luis Antonio Salinas Mata**
+
+---
+
 ## **Descripción General**
 Este proyecto representa la consolidación final de todo el trabajo realizado en la materia de computación gráfica. Lo que comenzó como una escena tridimensional básica se transformó en un ecosistema dinámico y fluido que simula el comportamiento emergente de una parvada masiva de 200 aves autónomas volando sobre un entorno forestal denso. 
 
@@ -43,14 +52,6 @@ proyecto-enjambre/
 * **Muro Anticolisión del Suelo**: Para evitar que la fuerza de cohesión empuje al grupo por debajo del escenario, implementamos un detector que evalúa la altura del relieve debajo de cada ave. Si un agente intenta descender más allá de la copa de los árboles, el sistema bloquea su avance y aplica un impulso vertical obligatorio que lo regresa al aire seguro.
 * **Rendimiento Sincronizado**: El bucle principal está restringido de forma estricta mediante un temporizador delta a un límite de 30 FPS estables. La interfaz muestra un medidor en tiempo real que valida la optimización ante cualquier evaluación.
 
----
-
-## **Desarrolladores (Autores)**
-Este proyecto fue diseñado, desarrollado y optimizado en equipo por:
-* **Jose Abraham Marin Sanchez**
-* **Luis Antonio Salinas Mata**
-
----
 
 ## **Demostración en Vivo**
 La aplicación se encuentra totalmente desplegado y listo para ejecutarse en GitHub Pages de forma nativa en cualquier navegador, sin necesidad de configuraciones locales:
