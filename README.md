@@ -27,7 +27,7 @@ proyecto-enjambre/
 └── assets/          # Carpeta de recursos multimedia del sistema.
     ├── fly.fbx      # Modelo tridimensional articulado del ave exportado desde Maya.
     └── alas.png     # Textura personalizada para vestir la superficie de los agentes.
-
+```
 
 
 ## **Características Integradas y Decisiones Técnicas**
