@@ -20,6 +20,7 @@ El principal logro técnico de esta aplicación es su alto rendimiento, mantenie
 ## **Estructura del Proyecto**
 El repositorio está organizado de manera limpia para separar el código fuente de los recursos gráficos externos:
 
+```text
 proyecto-enjambre/
 ├── index.html       # Contenedor de la página, lienzos de WebGL, estilos de la interfaz y mapa de importaciones.
 ├── main.js          # Código principal con la simulación de Boids, optimización espacial y lógica de shaders.
@@ -27,7 +28,7 @@ proyecto-enjambre/
     ├── fly.fbx      # Modelo tridimensional articulado del ave exportado desde Maya.
     └── alas.png     # Textura personalizada para vestir la superficie de los agentes.
 
----
+
 
 ## **Características Integradas y Decisiones Técnicas**
 
